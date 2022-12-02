@@ -222,12 +222,12 @@ void MovuinoRecorder::printStateSPIFFS()
   // Taille de la zone de fichier
   Serial.print("Total space:      ");
   Serial.print(SPIFFS.totalBytes());
-  Serial.println("byte");
+  Serial.println(" bytes");
 
   // Espace total utilise
   Serial.print("Total space used: ");
   Serial.print(SPIFFS.usedBytes());
-  Serial.println("byte");
+  Serial.println(" bytes");
   Serial.println();
 }
 

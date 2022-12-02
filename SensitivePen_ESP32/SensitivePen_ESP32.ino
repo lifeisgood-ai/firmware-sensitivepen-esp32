@@ -19,8 +19,8 @@
 #define CMD_FORMAT_SPIFF 'f' // Format the SPIFF
 #define CMD_CREATE_FILE 'c'  // Create a new file in the SPIFF
 #define CMD_READ_FILE 'r'    // Read the file
-#define CMD_ADD_LINE 'a'     // Add a ne line in the SPIFFS (usefull for debugging)
-#define CMD_STOP_RECORD 's'  // Stop the record
+#define CMD_ADD_LINE 'a'     // Add a new line in the SPIFFS (useful for debugging)
+#define CMD_STOP_RECORD 's'  // Stop recording
 #define CMD_LISTING_DIR 'l'  // List files in the directory
 #define CMD_SPIFF_INFO 'i'   // Get informations about the spiff
 
@@ -79,30 +79,7 @@ void setup()
 
 void loop()
 {
-  // -----------------------------------------
-  //                TEST
-  // -----------------------------------------
-  // osc.send("/movuino", (int)random(300));
-  // pressure.update();
-  // // pressure.printData();
-  // Serial.print(pressure.getPressure());
-  // Serial.print("\t");
-  // if(pressure.isTouch()) {
-  //   neopix.turnOn();
-  //   neopix.setColor(BLUE);
-  //   Serial.print(1);
-  //   Serial.print("\t");
-  //   Serial.println(-1);
-  // } else {
-  //   neopix.turnOff();
-  //   Serial.print(0);
-  //   Serial.print("\t");
-  //   Serial.println(0);
-  // }
-  // delay(50);
-  // Serial.println(pressure.isTouch());
   
-  // delay(50);
 
   // -----------------------------------------
   //                UPDATES
