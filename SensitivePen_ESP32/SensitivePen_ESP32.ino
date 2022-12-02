@@ -1,5 +1,6 @@
 #include <elapsedMillis.h>
 #include <WiFi.h>
+#include <time.h>
 
 #include "_MOVUINO_ESP32/_MPU9250.h"
 // #include "_MOVUINO_ESP32/_WifiOSC.h"
@@ -36,6 +37,12 @@ const char* ssid     = "<SSID>";
 const char* password = "<PASSWORD>";
 int port = 555;
 int ip[4] = {192, 168, 1, 18};
+
+// NTP configuration
+const char* ntpServer = "pool.ntp.org";
+const long  gmtOffset_sec = 3600; // gmt+1
+const int   daylightOffset_sec = 3600;
+
 
 MovuinoMPU9250 mpu = MovuinoMPU9250();
 // MovuinoWifiOSC osc = MovuinoWifiOSC(ssid, password, ip, port);
@@ -80,6 +87,14 @@ void setup()
   Serial.println("\nConnected to the WiFi network");
   Serial.print("Local ESP32 IP: ");
   Serial.println(WiFi.localIP());
+
+  // Init and get the time
+  configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
+  printLocalTime();
+  Serial.print("Timestamp now in seconds is: ");
+  Serial.println(get_time()); 
+  Serial.print("Timestamp now is: ");
+  Serial.println(get_timestamp());
 
 
   //disconnect WiFi as it's no longer needed
@@ -346,3 +361,32 @@ String get_wifi_status(int status){
     }
 }
 
+
+void printLocalTime(){
+  struct tm timeinfo;
+  if(!getLocalTime(&timeinfo)){
+    Serial.println("Failed to obtain time");
+    return;
+  }
+  Serial.println(&timeinfo, "Current date is %A, %B %d %Y %H:%M:%S");
+}
+
+// Function that gets current epoch time
+unsigned long get_time() {
+  time_t now;
+  struct tm timeinfo;
+  if (!getLocalTime(&timeinfo)) {
+    //Serial.println("Failed to obtain time");
+    return(0);
+  }
+  time(&now);
+  return now;
+}
+
+
+int64_t get_timestamp() {
+  struct timeval tv_now;
+  gettimeofday(&tv_now, NULL);
+  int64_t time_us = (int64_t)tv_now.tv_sec * 1000000L + (int64_t)tv_now.tv_usec;
+  return time_us;
+}
