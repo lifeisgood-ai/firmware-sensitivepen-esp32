@@ -1,4 +1,5 @@
 #include <elapsedMillis.h>
+#include <WiFi.h>
 
 #include "_MOVUINO_ESP32/_MPU9250.h"
 // #include "_MOVUINO_ESP32/_WifiOSC.h"
@@ -29,13 +30,15 @@
 #define BATTERY_MAX_VAL 2500 // ~4.2v
 
 // Wifi configuration
-char ssid[] = "COCOBONGO";
-char pass[] = "welcome!";
-int port = 7777;
+//char ssid[] = "COCOBONGO";
+//char password[] = "welcome!";
+const char* ssid     = "<SSID>";
+const char* password = "<PASSWORD>";
+int port = 555;
 int ip[4] = {192, 168, 1, 18};
 
 MovuinoMPU9250 mpu = MovuinoMPU9250();
-// MovuinoWifiOSC osc = MovuinoWifiOSC(ssid, pass, ip, port);
+// MovuinoWifiOSC osc = MovuinoWifiOSC(ssid, password, ip, port);
 MovuinoButton button = MovuinoButton();
 MovuinoRecorder recorder = MovuinoRecorder();
 MovuinoNeopixel neopix = MovuinoNeopixel();
@@ -58,7 +61,30 @@ uint32_t colFormat = RED;
 void setup()
 {
   Serial.begin(115200);
+  delay(1000);
   pinMode(BATTERY_PIN, INPUT);
+
+  // Connect to Wi-Fi
+  int status = WL_IDLE_STATUS;
+  Serial.print("\nConnecting to");
+  Serial.println(ssid);
+
+  WiFi.begin(ssid, password);
+  while(status != WL_CONNECTED){
+      delay(500);
+      status = WiFi.status();
+      //Serial.println(get_wifi_status(status));
+      Serial.print(".");
+  }
+  Serial.println(get_wifi_status(status));
+  Serial.println("\nConnected to the WiFi network");
+  Serial.print("Local ESP32 IP: ");
+  Serial.println(WiFi.localIP());
+
+
+  //disconnect WiFi as it's no longer needed
+  WiFi.disconnect(true);
+  WiFi.mode(WIFI_OFF);
   
   // Neopixel
   neopix.begin();
@@ -299,3 +325,24 @@ void showBatteryLevel(void)
   Serial.printf("Battery Level: %d%%\n", level);
   delay(2500);
 }
+
+
+String get_wifi_status(int status){
+    switch(status){
+        case WL_IDLE_STATUS:
+        return "WL_IDLE_STATUS";
+        case WL_SCAN_COMPLETED:
+        return "WL_SCAN_COMPLETED";
+        case WL_NO_SSID_AVAIL:
+        return "WL_NO_SSID_AVAIL";
+        case WL_CONNECT_FAILED:
+        return "WL_CONNECT_FAILED";
+        case WL_CONNECTION_LOST:
+        return "WL_CONNECTION_LOST";
+        case WL_CONNECTED:
+        return "WL_CONNECTED";
+        case WL_DISCONNECTED:
+        return "WL_DISCONNECTED";
+    }
+}
+
