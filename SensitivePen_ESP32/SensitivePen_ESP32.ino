@@ -55,7 +55,10 @@ bool isBtnHold = false;
 elapsedMillis dlyRec;
 
 String recordId = "SensitivePen";
-String colsId = "ax,ay,az,gx,gy,gz,mx,my,mz,pressure";
+// basic cols
+//String colsId = "ax,ay,az,gx,gy,gz,mx,my,mz,pressure";
+// custom cols (timestamp added)
+String colsId = "ts,ax,ay,az,gx,gy,gz,mx,my,mz";
 
 int timeHoldCallib = 1800;
 
@@ -207,6 +210,7 @@ void loop()
       pressure.update();  
 
       recorder.addRow();
+      recorder.pushData<String>(ToString(get_timestamp()));
       recorder.pushData<float>(mpu.ax);
       recorder.pushData<float>(mpu.ay);
       recorder.pushData<float>(mpu.az);
@@ -216,7 +220,7 @@ void loop()
       recorder.pushData<float>(mpu.mx);
       recorder.pushData<float>(mpu.my);
       recorder.pushData<float>(mpu.mz);
-      recorder.pushData<float>(pressure.getPressure());
+      // recorder.pushData<float>(pressure.getPressure());
     }
   }
 
@@ -390,3 +394,27 @@ int64_t get_timestamp() {
   int64_t time_us = (int64_t)tv_now.tv_sec * 1000000L + (int64_t)tv_now.tv_usec;
   return time_us;
 }
+
+String ToString(uint64_t x)
+{
+     boolean flag = false; // For preventing string return like this 0000123, with a lot of zeros in front.
+     String str = "";      // Start with an empty string.
+     uint64_t y = 10000000000000000000;
+     int res;
+     if (x == 0)  // if x = 0 and this is not testet, then function return a empty string.
+     {
+           str = "0";
+           return str;  // or return "0";
+     }    
+     while (y > 0)
+     {                
+            res = (int)(x / y);
+            if (res > 0)  // Wait for res > 0, then start adding to string.
+                flag = true;
+            if (flag == true)
+                str = str + String(res);
+            x = x - (y * (uint64_t)res);  // Subtract res times * y from x
+            y = y / 10;                   // Reducer y with 10    
+     }
+     return str;
+}  
