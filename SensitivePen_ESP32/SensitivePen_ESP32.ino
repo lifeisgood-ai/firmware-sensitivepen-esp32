@@ -22,6 +22,7 @@
 #define CMD_CREATE_FILE 'c'  // Create a new file in the SPIFF
 #define CMD_READ_FILE 'r'    // Read the file
 #define CMD_ADD_LINE 'a'     // Add a new line in the SPIFFS (useful for debugging)
+#define CMD_START_RECORD 'b'  // Start recording
 #define CMD_STOP_RECORD 's'  // Stop recording
 #define CMD_LISTING_DIR 'l'  // List files in the directory
 #define CMD_SPIFF_INFO 'i'   // Get informations about the spiff
@@ -174,8 +175,17 @@ void loop()
       neopix.blinkOn(50, 2);
       recorder.addRow();
       break;
+    case CMD_START_RECORD:
+      if (!recorder.isRecording())
+      {
+        startRecord();
+      }
+      break;    
     case CMD_STOP_RECORD:
-      stopRecord();
+      if (recorder.isRecording())
+      {
+        stopRecord();
+      }
       break;
     default:
       break;
