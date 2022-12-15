@@ -31,7 +31,9 @@
 #define BATTERY_MIN_VAL 1900 // ~3.3v
 #define BATTERY_MAX_VAL 2500 // ~4.2v
 
-// Wifi configuration
+// ****************************** //
+//       Wifi configuration       //
+// ****************************** //
 //char ssid[] = "COCOBONGO";
 //char password[] = "welcome!";
 const char* ssid     = "<SSID>";
@@ -39,12 +41,18 @@ const char* password = "<PASSWORD>";
 int port = 555;
 int ip[4] = {192, 168, 1, 18};
 
-// NTP configuration
+
+// ****************************** //
+//       NTP configuration        //
+// ****************************** //
 const char* ntpServer = "pool.ntp.org";
 const long  gmtOffset_sec = 3600; // gmt+1
 const int   daylightOffset_sec = 3600;
 
 
+// ****************************** //
+//     MovuinoInitialisation      //
+// ****************************** //
 MovuinoMPU9250 mpu = MovuinoMPU9250();
 // MovuinoWifiOSC osc = MovuinoWifiOSC(ssid, password, ip, port);
 MovuinoButton button = MovuinoButton();
@@ -77,7 +85,7 @@ void setup()
 
   // Connect to Wi-Fi
   int status = WL_IDLE_STATUS;
-  Serial.print("\nConnecting to");
+  Serial.print("\nConnecting to ");
   Serial.println(ssid);
 
   WiFi.begin(ssid, password);
